@@ -79,10 +79,10 @@ router.post('/api/updateLandRecordMojani', (req, res) => {
   console.log("Received ward no & area code: " + req.body.wardNo + "," + req.body.areaCode);
     mojani.find({selector:{pid:req.body.pid}}, function(er, result) {
 	  if (er) {
-		console.log("Error finding documents with Pid " + req.body.pid + "-" + result.docs.length);
+		console.log("Error finding documents with Pid " + req.body.pid);
       res.json({success : false, message : err+""});
 	  }
-		console.log("Found documents with " + req.body.wardNo + "," + req.body.areaCode);	
+			console.log("Found documents with Pid " + req.body.pid + ": " +result.docs.length );	
 
 	   var record = req.body; // land record to be updated
 	   record["_id"] = result.docs[0]["_id"];
