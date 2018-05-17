@@ -77,9 +77,10 @@ router.post('/api/addLandRecordMojani', (req, res) => {
 router.post('/api/updateLandRecordMojani', (req, res) => {
   console.log('Inside Express api to update new land record');
   console.log("Received ward no & area code: " + req.body.wardNo + "," + req.body.areaCode);
-    mojani.find({selector:{wardNo:req.body.wardNo, areaCode:req.body.areaCode}}, function(er, result) {
+    mojani.find({selector:{pid:req.body.pid}}, function(er, result) {
 	  if (er) {
-		console.log("Error finding documents with " + req.body.wardNo + "," + req.body.areaCode);
+		console.log("Error finding documents with Pid " + req.body.pid + "-" + result.docs.length);
+      res.json({success : false, message : err+""});
 	  }
 		console.log("Found documents with " + req.body.wardNo + "," + req.body.areaCode);	
 
@@ -108,6 +109,7 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
   mojani.find({selector:{wardNo:records[0].wardNo}}, function(er, result) {
 	  if (er) {
 		console.log("Error finding documents :" + er);
+      res.json({success : false, message : err+""});
 	  }
 	  console.log('Found documents with wardNo '+ records[0].wardNo +":"+ result.docs.length);
 	  for (var i = 0; i < result.docs.length; i++) {
