@@ -24,6 +24,7 @@ export class ViewlandrecordComponent implements OnInit {
   submitSuccess: boolean = false;
   lat :number;
   long : number; 
+  sketchURL : string;
  constructor(private formBuilder: FormBuilder,private location: Location, private manageLandRecordsService: ManageLandRecordsService, private router: Router,private route: ActivatedRoute) { }
   ngOnInit() {
     this.loadForm();
@@ -67,6 +68,9 @@ export class ViewlandrecordComponent implements OnInit {
                 console.log("landRecord object received:" + this.landRecord);
                 this.layoutForm.patchValue(this.landRecord);
                 this.setGeoCordinates();
+                if(response.sketchURL!=null && response.sketchURL!=""){
+                  this.sketchURL = response.sketchURL;
+               }
               }
               }); 
 

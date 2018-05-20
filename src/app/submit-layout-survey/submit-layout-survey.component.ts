@@ -21,14 +21,16 @@ export class SubmitLayoutSurveyComponent implements OnInit {
 
   ngOnInit() {
     this.surveyDataService.currentWardNo.subscribe(records => {
-      if(records!="")
-      this.wardNo = Number(records);
+      if(records)
+        this.wardNo = Number(records);
+    });
+    this.surveyDataService.currentAreaCode.subscribe(records => {
+      if(records)
+        this.areaCode = Number(records);
     });
 
-    this.surveyDataService.currentAreaCode.subscribe(records => {
-      if(records!="")
-      this.areaCode = Number(records);
-    });
+    //search the results if areacode and ward number present
+
     let criteria = {"wardNo" : this.wardNo, "areaCode" : this.areaCode};
     if(this.wardNo!=null && this.areaCode!=null){
       this.manageLandRecordsService.getLandRecordsMojaniInLayout(criteria)
@@ -36,6 +38,7 @@ export class SubmitLayoutSurveyComponent implements OnInit {
         response => {
               console.log("res received from getLandRecords service" + JSON.stringify(response));
               if (response !=null) {
+                delete response.landRecords['sketch'];
                   this.landRecords = <LandRecord[]> response.landRecords;
               if(this.landRecords!=null && this.landRecords.length > 0){
                   this.noSearchResults= false;
@@ -56,6 +59,7 @@ export class SubmitLayoutSurveyComponent implements OnInit {
       response => {
             console.log("res received from getLandRecords service" + JSON.stringify(response));
             if (response !=null) {
+                delete response.landRecords['sketch'];
                 this.landRecords = <LandRecord[]> response.landRecords;
              if(this.landRecords!=null && this.landRecords.length > 0){
                 this.noSearchResults= false;
