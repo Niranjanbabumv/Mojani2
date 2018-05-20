@@ -4,15 +4,16 @@ var multer = require('multer');
 var fs = require('fs');
 var vcapServices = require("vcap_services");
 var Cloudant = require('@cloudant/cloudant');
-
 var credentials = {};
 if(process.env.VCAP_SERVICES){ //for bluemix env
 	credentials = vcapServices.getCredentials('cloudantNoSQLDB', null, 'cloudant_land_records'); //get the cloudant_land_records service instance credentials
 	console.log("credentials",credentials);
 }
 
-var cloudantURL = process.env.CLOUDANT_DB_URL || credentials.url;
-var cloudant = Cloudant(cloudantURL);
+var cloudant_url = process.env.CLOUDANT_DB_URL || credentials.url;
+var cloudant = Cloudant(cloudant_url);
+
+
 
 var mojaniDBName = process.env.MOJANI_DB || "mojani";
 //connect to MOJANI DB
@@ -29,12 +30,19 @@ var storage = multer.diskStorage({
     cb(null, file.originalname);
   }
 });
+
+/* 
+var uploadStorage = multer.memoryStorage();
+var upload = multer({storage: storage})
+app.post('/processform', upload.single('myfile'), processForm);
+ */
+ 
 var upload = multer({ storage: storage });
 //file upload function
-router.post("/fileUpload", upload.array("uploads[]", 12), function (req, res) {
-  console.log('files', req.files);
+router.post("/fileUpload", upload.array("uploads[]", 5), function (req, res) {
   //res.send(req.files);
   var file = req.files[0];
+    console.log('file :', file);
   /*files [ { fieldname: 'uploads[]',
     originalname: 'Penguins_123256478.jpg',
     encoding: '7bit',
@@ -45,7 +53,7 @@ router.post("/fileUpload", upload.array("uploads[]", 12), function (req, res) {
     size: 777835 } ] */
 	
 	//extract pid from file name
-	var pid = file.filename.split('_').pop().split('.').shift();
+	var pid = file.filename.split('_sketch').shift();
 	
   mojani.find({selector:{pid:Number(pid)}}, function(er, result) {
 	  if (er) {
@@ -55,33 +63,33 @@ router.post("/fileUpload", upload.array("uploads[]", 12), function (req, res) {
 	  if(result.docs && result.docs.length > 0){
 	  console.log('Found documents with pid for attachment: '+ pid +":"+ result.docs.length);
 	  		fs.readFile(file.path, function(err, data) {
-		  if (!err) {
-			  console.log("doc data :",result.docs[0]);
-			    console.log("_rev value :",result.docs[0]['_rev']);
-				mojani.attachment.insert(file.filename, file.filename, data, file.mimetype,
-				  { rev: result.docs[0]["_rev"] }, function(err, body) {
-					if (!err){
-					  console.log(body); //log response
-					  res.json({success : true,message:"Uploaded documents successful"});
-					  }
-					  console.log("upload attachment failed :" , err);
-					  res.json({success : false,message:"error occurred"});
-					  
-				});
-		  }
-		});
+				  if (!err) {
+				  		var doc = result.docs[0];
+					    console.log("doc data :",doc);
+						console.log("_rev value :",doc['_rev']);
+				       /*Attachment uploaded from the client*/
+						mojani.attachment.insert(doc["_id"], file.filename, data, file.mimetype ,{rev:doc['_rev']},
+						function(err, body) {
+							if (!err){
+							  console.log("file attached to the document ",body); //log response
+							  fs.unlink(file.path, (err) => {
+											if (err) console.log("File uploaded deletion failed !",file.path);
+											else console.log("File successfully deleted", file.path);
+							  });
+							  res.json({success : true,message:"Upload of file successful"});
+							  }
+							 else{ console.log("upload attachment failed :" , err);
+							  res.json({success : false,message:"error occurred"});
+							  }
+							  
+						});
+				  }
+		}); 
 	}
-	});
-
-
-
+  });
 });
 
-/* 
-var uploadStorage = multer.memoryStorage();
-var upload = multer({storage: uploadStorage})
-app.post('/processform', upload.single('myfile'), processForm);
- */
+
 
 
 module.exports = router;

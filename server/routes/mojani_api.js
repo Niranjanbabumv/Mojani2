@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var Cloudant = require('@cloudant/cloudant');
 var vcapServices = require("vcap_services");
-
+var Cloudant = require('@cloudant/cloudant');
 var credentials = {};
 if(process.env.VCAP_SERVICES){ //for bluemix env
 	credentials = vcapServices.getCredentials('cloudantNoSQLDB', null, 'cloudant_land_records'); //get the cloudant_land_records service instance credentials
@@ -12,8 +11,8 @@ if(process.env.VCAP_SERVICES){ //for bluemix env
 
 var cloudant_url = process.env.CLOUDANT_DB_URL || credentials.url;
 var cloudant = Cloudant(cloudant_url);
-//create the document in the db if not available
 
+//create the document in the db if not available
 var mojaniDBName = process.env.MOJANI_DB || "mojani";
 
 cloudant.db.create(mojaniDBName, function(err) {
@@ -106,24 +105,29 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
   var records = req.body; //Array of land records
   console.log("list of documents" + JSON.stringify(records));
   var documentIdsAdded = [];
-  mojani.find({selector:{wardNo:records[0].wardNo}}, function(er, result) {
+  mojani.find({selector:{wardNo:records[0].wardNo}}, function(er, result){
 	  if (er) {
 		console.log("Error finding documents :" + er);
       res.json({success : false, message : err+""});
 	  }
 	  console.log('Found documents with wardNo '+ records[0].wardNo +":"+ result.docs.length);
-	  for (var i = 0; i < result.docs.length; i++) {
-		console.log('Doc id:'+ result.docs[i].id);
-		records[i]["_id"] = result.docs[i]["_id"];
-		records[i]["_rev"] = result.docs[i]["_rev"];
-        documentIdsAdded.push(result.docs[i].pid);
+		for (var i = 0; i < records.length; i++) {
+			for(var j=0; j < result.docs.length; j++){
+					if(records[i].pid == result.docs[j].pid){
+						records[i]["_id"] = result.docs[j]["_id"];
+						records[i]["_rev"] = result.docs[j]["_rev"];
+						console.log("Document matched ",result.docs[j].pid);
+						documentIdsAdded.push(result.docs[j].pid);
+						break;
+					}
+			}		
 		}
-		  mojani.bulk({docs : records}, function(err, doc) {
+  mojani.bulk({docs : records}, function(err, doc) {
 					if (err) {
-						console.log("Error updating records to Mojani" +err);
+						console.log("Error in updating records to Mojani" +err);
 						res.json({success : false, message : err+""});
 					} else{
-						console.log("success saving records to Mojani");
+						console.log("success BULK saving records to Mojani");
 				       res.json({success : true, documentIdsAdded : documentIdsAdded});
 					}				
 				});	
@@ -147,6 +151,7 @@ mojani.find({selector:{wardNo:req.params.wardNo}}, function(er, result) {
 
 /* GET API to get land records from MOJANI using PID*/
 router.get('/api/getLandRecordsMojaniByPid/:id', (req, res) => {
+  let sketchURL;
   console.log('Inside Express api to get land records by Pid');
 	  if(!isNaN(req.params.id)){
 			mojani.find({selector:{pid:Number(req.params.id)}}, function(er, result) {
@@ -156,8 +161,15 @@ router.get('/api/getLandRecordsMojaniByPid/:id', (req, res) => {
 				  }
 
 				  if(result.docs.length > 0){
-						res.json({success : true, message:"Found "+result.docs.length+" documents", landRecords:result.docs[0]});
-                        console.log('Found documents with PID count:'+ req.params.id +":"+ result.docs.length);
+				        console.log('Found documents with PID count:'+ req.params.id +":"+ result.docs.length);
+						let doc = result.docs[0];
+						let attachmentName;
+						if(doc['_attachments'] !=null){
+							attachmentName = Object.keys(doc['_attachments'])[0];
+							sketchURL= cloudant_url + "/" + mojaniDBName + "/" + doc["_id"]+ "/" + attachmentName;
+						}
+						res.json({success : true, message:"Found "+result.docs.length+" documents", landRecords: doc, sketchURL : sketchURL});
+   
 						}
 					else
 						res.json({success : true, message: "No documents found", landRecords:null});
