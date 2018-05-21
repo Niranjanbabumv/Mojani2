@@ -1,10 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
+var os = require('os');
 var fs = require('fs');
 var vcapServices = require("vcap_services");
 var Cloudant = require('@cloudant/cloudant');
 var credentials = {};
+
 if(process.env.VCAP_SERVICES){ //for bluemix env
 	credentials = vcapServices.getCredentials('cloudantNoSQLDB', null, 'cloudant_land_records'); //get the cloudant_land_records service instance credentials
 	console.log("credentials",credentials);
@@ -24,7 +26,7 @@ var mojani = cloudant.use(mojaniDBName);
 // set the directory for the uploads to the uploaded to
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads/')
+    cb(null,os.tmpdir());
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);

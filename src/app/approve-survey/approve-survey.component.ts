@@ -62,7 +62,7 @@ export class ApproveSurveyComponent implements OnInit {
             console.log("res received from getLandRecords service" + JSON.stringify(response));
             if (response !=null) {
               //  this.router.navigate(['/success', this.landRecord.pid]);
-              this.landRecords = <LandRecord[]> response.landRecords;
+              this.landRecords = <LandRecord[]> response.landRecords.filter(landRec => !landRec.isMojaniApproved);
              if(this.landRecords!=null && this.landRecords.length > 0){
                this.noSearchResults= false;
              }else{

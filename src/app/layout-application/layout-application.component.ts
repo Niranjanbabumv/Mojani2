@@ -60,7 +60,7 @@ export class LayoutApplicationComponent implements OnInit {
           totalArea: '',
           address: [null, Validators.required]
       }),
-      sketch : [null, Validators.required],
+      sketch : [null],
       ownerDetails: this.formBuilder.group({
           ownerName: [null, [Validators.required,Validators.pattern('[a-zA-Z\\s]*')]],
           gender: [null, Validators.required],
