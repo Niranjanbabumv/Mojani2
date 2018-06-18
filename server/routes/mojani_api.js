@@ -115,66 +115,60 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
       res.json({success : false, message : err+""});
 	  }
 	  console.log('Found documents with wardNo '+ records[0].wardNo +":"+ result.docs.length);
+	    console.log('documents with wardNo from mojani'+ records[0].wardNo +":"+ JSON.stringify(result.docs));
 		for (var i = 0; i < records.length; i++) {
 			for(var j=0; j < result.docs.length; j++){
 					if(records[i].pid == result.docs[j].pid){
 						records[i]["_id"] = result.docs[j]["_id"];
 						records[i]["_rev"] = result.docs[j]["_rev"];
-						
-			/* 			var proxyRequest = http.request({
-						  host: '13.232.73.187',
-						  port: 3000,
-						  method: 'POST',
-						  path: '/api/org.bhoomi.landrecords.AddAsset'
-						},
-						function (proxyResponse) {
-						  proxyResponse.on('data', function (chunk) {
-							response.send(chunk);
-						  });
-						}); */
+					console.log('calling block chain code');	
+		             var ownerReq = {
+										  "$class": "org.bhoomi.landrecords.Owner",
+										  "aadharNo": result.docs[j].ownerDetails.aadharNo+"",
+										  "ownerName": result.docs[j].ownerDetails.ownerName+"",
+										  "gender": result.docs[j].ownerDetails.gender+"",
+										  "mobileNo": result.docs[j].ownerDetails.mobileNo+"",
+										  "emailID": result.docs[j].ownerDetails.emailID+"",
+										  "address": result.docs[j].ownerDetails.address+""						
+									}
+									
+									console.log("Owner request body :" +JSON.stringify(ownerReq));
 
 					requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.Owner', {
 									method: 'POST',
-									body: {
-												
-														  "$class": "org.bhoomi.landrecords.Owner",
-														  "aadharNo": records[i].aadharNo+"",
-														  "ownerName": records[i].ownerName+"",
-														  "gender": records[i].gender+"",
-														  "mobileNo": records[i].mobileNo+"",
-														  "emailID": records[i].emailID+"",
-														  "address": records[i].address+""
-
-											
-						
-										},
+									body: ownerReq ,
 									dataType: 'json'		
 								})
 							.then(function(response) {
 								// get the code
 								var statusCode = response.getCode();  
 							    console.log("Update land record Fabric Response code : " + code);
-					              requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.AddAsset', {
+								console.log(response.getBody());
+					              
+							});
+							
+							
+							requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.AddAsset', {
 									method: 'POST',
 									body: {
 										  "$class": "org.bhoomi.landrecords.AddAsset",
 										  "landrecord": {
 											"$class": "org.bhoomi.landrecords.LandRecord",
-											"pid": records[i].pid+"",
-											"wardNo": records[i].wardNo+"",
-											"areaCode": records[i].areaCode+"",
-											"siteNo": records[i].siteNo+"",
-											"txnId": "",
-											"timeStamp": JSON.stringify(new Date()),
+											"pid": result.docs[j].pid+"",
+											"wardNo": result.docs[j].wardNo+"",
+											"areaCode": result.docs[j].areaCode+"",
+											"siteNo": result.docs[j].siteNo+"",
+											"txnId": "NA",
+											"timeStamp":  new Date()+"",
 											"isMojaniApproved": true,
 											"isKaveriApproved": false,
-											"latitude": records[i].latitude+"",
-											"longitude": records[i].longitude+"",
-											"length": records[i].length+"",
-											"width": records[i].width+"",
-											"totalArea": records[i].totalArea+"",
-											"address": records[i].address+"",
-											"owner": "resource:org.bhoomi.landrecords.Owner#" + records[i].aadharNo
+											"latitude": result.docs[j].geoData.latitude+"",
+											"longitude": result.docs[j].geoData.longitude+"",
+											"length": result.docs[j].geoData.length+"",
+											"width": result.docs[j].geoData.width+"",
+											"totalArea": result.docs[j].geoData.totalArea+"",
+											"address": result.docs[j].geoData.address+"",
+											"owner": "resource:org.bhoomi.landrecords.Owner#" + result.docs[j].ownerDetails.aadharNo
 										  }
 										},
 									dataType: 'json'		
@@ -183,7 +177,7 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
 								// get the code
 								var code = response.getCode();  
 								console.log("Update land record OWNER Fabric Response code : " + code);
-							});
+								console.log(response.getBody());
 							});
 	
 		
