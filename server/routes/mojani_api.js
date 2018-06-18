@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var vcapServices = require("vcap_services");
 var Cloudant = require('@cloudant/cloudant');
+
+var requestify = require('requestify'); 
+
+var http = require('http');
 var credentials = {};
 if(process.env.VCAP_SERVICES){ //for bluemix env
 	credentials = vcapServices.getCredentials('cloudantNoSQLDB', null, 'cloudant_land_records'); //get the cloudant_land_records service instance credentials
@@ -116,12 +120,85 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
 					if(records[i].pid == result.docs[j].pid){
 						records[i]["_id"] = result.docs[j]["_id"];
 						records[i]["_rev"] = result.docs[j]["_rev"];
+						
+			/* 			var proxyRequest = http.request({
+						  host: '13.232.73.187',
+						  port: 3000,
+						  method: 'POST',
+						  path: '/api/org.bhoomi.landrecords.AddAsset'
+						},
+						function (proxyResponse) {
+						  proxyResponse.on('data', function (chunk) {
+							response.send(chunk);
+						  });
+						}); */
+
+					requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.Owner', {
+									method: 'POST',
+									body: {
+												{
+														  "$class": "org.bhoomi.landrecords.Owner",
+														  "aadharNo": records[i].aadharNo+"",
+														  "ownerName": records[i].ownerName+"",
+														  "gender": records[i].gender+"",
+														  "mobileNo": records[i].mobileNo+"",
+														  "emailID": records[i].emailID+"",
+														  "address": records[i].address+""
+
+												}
+						
+										},
+									dataType: 'json'		
+								})
+							.then(function(response) {
+								// get the code
+								var statusCode = response.getCode();  
+							    console.log("Update land record Fabric Response code : " + code);
+					              requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.AddAsset', {
+									method: 'POST',
+									body: {
+										  "$class": "org.bhoomi.landrecords.AddAsset",
+										  "landrecord": {
+											"$class": "org.bhoomi.landrecords.LandRecord",
+											"pid": records[i].pid+"",
+											"wardNo": records[i].wardNo+"",
+											"areaCode": records[i].areaCode+"",
+											"siteNo": records[i].siteNo+"",
+											"txnId": "",
+											"timeStamp": JSON.stringify(new Date()),
+											"isMojaniApproved": true,
+											"isKaveriApproved": false,
+											"latitude": records[i].latitude+"",
+											"longitude": records[i].longitude+"",
+											"length": records[i].length+"",
+											"width": records[i].width+"",
+											"totalArea": records[i].totalArea+"",
+											"address": records[i].address+"",
+											"owner": "resource:org.bhoomi.landrecords.Owner#" + records[i].aadharNo
+										  }
+										},
+									dataType: 'json'		
+								})
+							.then(function(response) {
+								// get the code
+								var code = response.getCode();  
+								console.log("Update land record OWNER Fabric Response code : " + code);
+							});
+							});
+	
+						app.post(' ,function (req,res){
+	
+						});
 						console.log("Document matched ",result.docs[j].pid);
 						documentIdsAdded.push(result.docs[j].pid);
 						break;
 					}
 			}		
 		}
+
+		
+		
+		
   mojani.bulk({docs : records}, function(err, doc) {
 					if (err) {
 						console.log("Error in updating records to Mojani" +err);
