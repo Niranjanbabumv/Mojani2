@@ -18,9 +18,18 @@ export class LoginComponent implements OnInit {
   constructor(private loginAuthService : LoginAuthenticationService, private router: Router) {}
 
   ngOnInit() {
+   // document.body.classList.add("loginPage");
+          document.body.style.backgroundImage = "url('/assets/images/survey-bg.jpg')";
+          document.body.style.backgroundSize = "cover";
+          document.getElementById("loginbox").classList.add("loginLabels");
+          document.getElementById("headerTitle").classList.add("header");
 
   }
 
+  ngOnDestroy() {
+   // document.body.classList.remove("loginPage");
+   document.body.removeAttribute("style");
+  }
   onSubmit(userlogin : NgForm){
     if(userlogin.valid){
         this.loading = true; // validation in progress

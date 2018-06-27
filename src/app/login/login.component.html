@@ -1,7 +1,7 @@
-<div align="center">
-    <h3>MOJANI - Login</h3>
+<div align="center" id="headerTitle">
+    <h3>User Login</h3>
 </div>
-<div class="col-md-6 col-md-offset-3">
+<div id ="loginbox" class="col-md-6 col-md-offset-3">
     <form #userlogin = "ngForm" (ngSubmit) = "onSubmit(userlogin)" novalidate>
       <div class="form-group" [ngClass]="{ 'has-error': userlogin.submitted && !username.valid }">
         <label for="username">Username</label>
@@ -14,7 +14,7 @@
         <div class="login alert"  *ngIf="userlogin.submitted && !password.valid">Password is required</div>
       </div>
       <div class="form-group" align='center'>
-          <button [disabled]="loading" class="btn btn-primary">Login</button>
+          <button [disabled]="loading" class="btn btn-success">Login</button>
       </div>
       <div *ngIf="authMessage && authMessage!=''" class="alert alert-danger" >{{authMessage}}</div>
     </form>

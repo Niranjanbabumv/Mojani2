@@ -1,7 +1,7 @@
+<div align="right"><app-logout></app-logout></div>
 <div  align="center">
-    <h3>MOJANI- Approve Survey Appplications</h3>
+    <h3>Approve Survey Applications</h3>
   </div>
-  <div align="right"><app-logout></app-logout></div>
  <div *ngIf="approveSuccess; then successMsg else approveForm" ></div>
    <ng-template #approveForm>
   <div class="panel panel-default">
@@ -12,9 +12,10 @@
     <div class="form-group">
       <div class="col-md-4">
         <label for="wardNo" class="control-label required">Ward #</label>
-        <input type="text" id="wardNo" name="wardNo"  [(ngModel)]="wardNo"  />
+        <input type="text" id="wardNo" name="wardNo" class="form-control"  [(ngModel)]="wardNo"  />
       </div>
       <div class="col-md-4">
+	  <br/>
       <button type="submit" class="btn btn-primary" (click)= "search()">Search</button>
       </div>
     </div>
@@ -22,7 +23,7 @@
     </div>
 <!--Search results of the land records for approval -->
 <div *ngIf= "fetchComplete" >
-<table class="table table-striped">
+<table class="table table-striped table-responsive">
   <thead>
       <tr>
           <th>Property ID</th>

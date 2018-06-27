@@ -1,3 +1,26 @@
 .login.alert{
   color:red;
 }
+
+
+
+.loginPage{
+  background-image: url("/assets/images/survey-bg.jpg") !important;
+  background-color: red;
+  background-size : cover !important;
+ }
+
+
+ #loginbox.loginLabels label{
+      color:aliceblue;
+ }
+
+
+ #loginbox.loginLabels .login.alert{
+  font-weight:bold;
+}
+
+#headerTitle.header h3{
+color:aliceblue;
+
+}

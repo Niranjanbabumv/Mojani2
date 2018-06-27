@@ -1,7 +1,7 @@
-<div  align="center">
-  <h3>MOJANI- Submit Survey for Layout</h3>
-</div>
 <div align="right"><app-logout></app-logout></div>
+<div  align="center">
+  <h3>Submit Survey for Layout</h3>
+</div>
 <div *ngIf="submitSuccess; then successMsg else approveForm" ></div>
  <ng-template #approveForm>
 <div class="panel panel-default">
@@ -12,13 +12,14 @@
   <div class="form-group">
     <div class="col-md-4">
       <label for="wardNo" class="control-label required" required>Ward #</label>
-      <input type="text" id="wardNo" name="wardNo"  [(ngModel)]="wardNo"  />
+      <input type="text" id="wardNo" name="wardNo" class="form-control"  [(ngModel)]="wardNo"  />
     </div>
     <div class="col-md-4">
       <label for="wardNo" class="control-label required" required>Area Code</label>
-      <input type="text" id="areaCode" name="areaCode"  [(ngModel)]="areaCode"  />
+      <input type="text" id="areaCode" name="areaCode" class="form-control"  [(ngModel)]="areaCode"  />
     </div>
     <div class="col-md-4">
+	<br/>
     <button type="submit" class="btn btn-primary" (click)= "search()">Search</button>
     </div>
   </div>
@@ -26,27 +27,25 @@
   </div>
 <!--Search results of the land records for approval -->
 <div *ngIf= "fetchComplete" >
-<table class="table table-striped">
+<table class="table table-striped table-responsive">
 <thead>
     <tr>
         <th>PID</th>
-        <th>Ward No</th>
-        <th>Area Code</th>
         <th>Site No</th>
         <th>Total Area</th>
         <th>Latitude</th>
         <th>Longitude</th>
+        <th>Submission Status</th>
     </tr>
 </thead>
 <tbody>
     <tr *ngFor="let land of landRecords;let i = index">
         <td><a [routerLink] = "['/layoutApplication']" [queryParams]="{pid:land.pid}">{{land.pid}}</a></td>
-        <td>{{land.wardNo}}</td>
-        <td>{{land.areaCode}}</td>
         <td>{{land.siteNo}}</td>
         <td>{{land.geoData.totalArea}}</td>
         <td>{{land.geoData.latitude}}</td>
         <td>{{land.geoData.longitude}}</td>
+        <td>{{land.isMojaniSubmitted ? 'Yes' : 'No'}}</td>
   
     </tr>
 </tbody>

@@ -1,1 +1,34 @@
  /*to be done */
+ #header{
+        width:100%;
+        height:70px;
+        background: rgba(105,171,151,1);
+        background: -moz-linear-gradient(left, rgba(105,171,151,1) 0%, rgba(29,124,95,1) 100%);
+        background: -webkit-gradient(left top, right top, color-stop(0%, rgba(105,171,151,1)), color-stop(100%, rgba(29,124,95,1)));
+        background: -webkit-linear-gradient(left, rgba(105,171,151,1) 0%, rgba(29,124,95,1) 100%);
+        background: -o-linear-gradient(left, rgba(105,171,151,1) 0%, rgba(29,124,95,1) 100%);
+        background: -ms-linear-gradient(left, rgba(105,171,151,1) 0%, rgba(29,124,95,1) 100%);
+        background: linear-gradient(to right, rgba(105,171,151,1) 0%, rgba(29,124,95,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#69ab97', endColorstr='#1d7c5f', GradientType=1 );
+    }
+    #headerContent{
+      margin: 0 auto; 
+      width: 600px;
+      padding: 1px 50px 50px 1px;
+      color : #edefea;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    #headerContent h3{
+      color:#edefea;
+    }
+
+    .logo{
+      float: left;
+      padding:5px 10px 0px 20px;
+    }
+   .logo img{
+     height:60px;
+    }
+
