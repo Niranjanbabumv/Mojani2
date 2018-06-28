@@ -214,7 +214,12 @@ mojani.find({selector:{wardNo:req.params.wardNo}}, function(er, result) {
 		res.json({success : false,message:"Error finding documents :"+er,landRecords:null});
 	  }
 	  console.log('Found documents with wardNo count: '+ req.params.wardNo +":"+ result.docs.length);
-	  res.json({success : true, message:"Found "+result.docs.length+" documents", landRecords:result.docs});
+	  var filteredRecords;
+	    if(result.docs!=null){
+			filteredRecords= result.docs.filter(record => record.isMojaniSubmitted);
+		}
+	  console.log('Filtered documents with wardNo Approved count: '+ req.params.wardNo +":"+ result.docs.length);
+	  res.json({success : true, message:"Found "+result.docs.length+" documents", landRecords:filteredRecords});
 	});
 });
 
@@ -251,7 +256,7 @@ router.get('/api/getLandRecordsMojaniByPid/:id', (req, res) => {
 /* GET API to get land records from MOJANI using Ward No & Area code*/
 router.get('/api/getLandRecordsMojaniInLayout/:wardNo/:areaCode', (req, res) => {
  console.log('Inside Express api to get land records by Ward No');
-mojani.find({selector:{wardNo:req.params.wardNo, areaCode:req.params.areaCode}}, function(er, result) {
+mojani.find({selector:{wardNo:req.params.wardNo, areaCode:req.params.areaCode}}, function(er, result) {4
 	  if (er) {
 		console.log("Error finding documents :" + er);
 		res.json({success : false,message:"Error finding documents",landRecords:null});
