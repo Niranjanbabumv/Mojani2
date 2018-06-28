@@ -123,18 +123,21 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
 						records[i]["_rev"] = result.docs[j]["_rev"];
 					console.log('calling block chain code');	
 		             var ownerReq = {
-										  "$class": "org.bhoomi.landrecords.Owner",
-										  "aadharNo": result.docs[j].ownerDetails.aadharNo+"",
-										  "ownerName": result.docs[j].ownerDetails.ownerName+"",
-										  "gender": result.docs[j].ownerDetails.gender+"",
-										  "mobileNo": result.docs[j].ownerDetails.mobileNo+"",
-										  "emailID": result.docs[j].ownerDetails.emailID+"",
-										  "address": result.docs[j].ownerDetails.address+""						
+                     "$class": "org.bhoomi.landrecords.AddOwner",
+                     "owner" : {
+                        "$class": "org.bhoomi.landrecords.Owner",
+                        "aadharNo": result.docs[j].ownerDetails.aadharNo+"",
+                        "ownerName": result.docs[j].ownerDetails.ownerName+"",
+                        "gender": result.docs[j].ownerDetails.gender+"",
+                        "mobileNo": result.docs[j].ownerDetails.mobileNo+"",
+                        "emailID": result.docs[j].ownerDetails.emailID+"",
+                        "address": result.docs[j].ownerDetails.address+""	
+                     }
 									}
 									
 									console.log("Owner request body :" +JSON.stringify(ownerReq));
 
-					requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.Owner', {
+					requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.AddOwner', {
 									method: 'POST',
 									body: ownerReq ,
 									dataType: 'json'		
