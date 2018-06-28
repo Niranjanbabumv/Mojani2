@@ -151,10 +151,10 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
 							});
 							
 							
-							requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.AddAsset', {
+							requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.AddLandRecord', {
 									method: 'POST',
 									body: {
-										  "$class": "org.bhoomi.landrecords.AddAsset",
+										  "$class": "org.bhoomi.landrecords.AddLandRecord",
 										  "landrecord": {
 											"$class": "org.bhoomi.landrecords.LandRecord",
 											"pid": result.docs[j].pid+"",
