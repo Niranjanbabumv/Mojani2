@@ -7,6 +7,7 @@ export class LandRecord {
   owner: Owner;
   isMojaniSubmitted : boolean;
   isMojaniApproved : boolean;
+  isMojaniRejected: boolean;
   constructor() { }
 
 }

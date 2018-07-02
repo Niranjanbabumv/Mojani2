@@ -20,7 +20,7 @@
     </div>
     <div class="col-md-4">
 	<br/>
-    <button type="submit" class="btn btn-primary" (click)= "search()">Search</button>
+    <button type="submit" class="btn btn-primary" (click)= "search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
     </div>
   </div>
   </div>  
@@ -35,7 +35,7 @@
         <th>Total Area</th>
         <th>Latitude</th>
         <th>Longitude</th>
-        <th>Submission Status</th>
+        <th>Status</th>
     </tr>
 </thead>
 <tbody>
@@ -45,7 +45,7 @@
         <td>{{land.geoData.totalArea}}</td>
         <td>{{land.geoData.latitude}}</td>
         <td>{{land.geoData.longitude}}</td>
-        <td>{{land.isMojaniSubmitted ? 'Yes' : 'No'}}</td>
+        <td>{{getApplicationStatus(land)}}</td>
   
     </tr>
 </tbody>

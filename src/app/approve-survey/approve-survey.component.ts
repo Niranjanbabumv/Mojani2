@@ -16,6 +16,7 @@ export class ApproveSurveyComponent implements OnInit {
   wardNo : number;
   fetchComplete : boolean = false;
   noSearchResults : boolean = false;
+  approveAction : boolean = false;
   
   constructor(private manageLandRecordsService : ManageLandRecordsService, private surveyDataService : SurveyDataService) {
    }
@@ -32,8 +33,8 @@ export class ApproveSurveyComponent implements OnInit {
 
   onSubmit(){
     console.log("ApplicationData" + JSON.stringify(this.landRecords));
-    
-    //TBD - To add records to block chain
+    this.approveAction = true;
+    //To add records to block chain
     this.approvedRecords =  this.landRecords.filter(
     (rec) => rec.isMojaniApproved);
     this.manageLandRecordsService.updateMojaniApprovedRecords(this.approvedRecords)
@@ -46,6 +47,29 @@ export class ApproveSurveyComponent implements OnInit {
       });
     
   }
+
+  onReject(){
+    this.approveAction = false;
+    console.log("ApplicationData" + JSON.stringify(this.landRecords));
+    this.approvedRecords =  this.landRecords.filter(
+    (rec) => rec.isMojaniApproved);
+
+    this.approvedRecords.forEach(
+    (record,index) => {
+        record.isMojaniRejected = true;
+        record.isMojaniApproved= false;
+    });
+    this.manageLandRecordsService.updateMojaniApprovedRecords(this.approvedRecords)
+    .subscribe(
+      response => {
+        console.log("res received updateLandrecordMojani service" + JSON.stringify(response));
+        if (response !=null && response.success) {
+          this.approveSuccess = true; 
+        }   
+      });
+    
+  }
+  
 
   submitNew(){
         this.landRecords = [];

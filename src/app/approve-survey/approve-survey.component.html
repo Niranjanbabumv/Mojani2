@@ -16,7 +16,7 @@
       </div>
       <div class="col-md-4">
 	  <br/>
-      <button type="submit" class="btn btn-primary" (click)= "search()">Search</button>
+      <button type="submit" class="btn btn-primary" (click)= "search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
       </div>
     </div>
     </div>  
@@ -31,7 +31,7 @@
           <th>Area Code</th>
           <th>Site No</th>
           <th>Total Area</th>
-          <th>Approve</th>
+          <th>Action</th>
       </tr>
   </thead>
   <tbody>
@@ -47,15 +47,21 @@
 </table> 
 <div *ngIf='noSearchResults' style='color:red;' align='center'><strong>No matching results found !</strong></div>
 <div *ngIf='!noSearchResults' align='right'>
+<button type="submit" class="btn btn-danger" (click)= "onReject()">Reject</button>
 <button type="submit" class="btn btn-primary" (click)= "onSubmit()">Approve</button>
 </div>
 </div>
 </ng-template>
 <!--Success message for the approval-->
 <ng-template #successMsg >
-<div class="alert alert-success"> <strong>Success!</strong>
-All the below approved records have been committed to the HyperLedger. Their unique digital Ids are listed below :
-<ul *ngFor= "let rec of approvedRecords">
+<div  class="alert alert-success"> <strong>Success!</strong>
+<span *ngIf = 'approveAction'>
+  All the below approved records have been committed to the HyperLedger. Their unique digital Ids are listed below :
+</span>
+<span *ngIf = '!approveAction'>
+  All the records with below PIDs have been rejected!
+</span>
+  <ul *ngFor= "let rec of approvedRecords">
   <li>{{rec.pid}}</li>
 </ul>
 </div>

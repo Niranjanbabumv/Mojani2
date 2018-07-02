@@ -16,7 +16,6 @@ export class SubmitLayoutSurveyComponent implements OnInit {
   private fetchComplete : boolean = false;
   private noSearchResults : boolean = false;
   private landRecords : LandRecord[];
-  
   constructor(private manageLandRecordsService : ManageLandRecordsService,private surveyDataService: SurveyDataService) { }
 
   ngOnInit() {
@@ -73,4 +72,20 @@ export class SubmitLayoutSurveyComponent implements OnInit {
           });
           
   }
+
+  getApplicationStatus(landRecord){
+       if(landRecord && landRecord.isMojaniSubmitted){
+            if(landRecord.isMojaniApproved){
+              return "Approved";
+            }else if(landRecord.isMojaniRejected) {
+              return "Rejected";
+            }else{
+              return "Submitted";
+            }
+          }
+          return "Not Submitted";
+  }
+
+
+  
 }

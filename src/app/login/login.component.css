@@ -10,6 +10,7 @@
 
  #loginbox.loginLabels label{
       color:aliceblue;
+      font-size : 18px;
  }
 
 
@@ -21,3 +22,8 @@
 color:aliceblue;
 
 }
+
+
+/* #loginbox .input-group-lg > .form-control, .input-group-lg > .input-group-addon, .input-group-lg > .input-group-btn > .btn {
+
+} */

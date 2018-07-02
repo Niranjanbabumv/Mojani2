@@ -157,7 +157,7 @@
     </div>
     </fieldset>
     <div align="right">
-      <button class="btn btn-default" (click) = 'goBack()'>Back</button>
+      <button type="button" class="btn btn-default" (click) = 'goBack()'>Back</button>
       <button type="submit" class="btn btn-primary" [disabled]='isReadOnly'>Submit</button>
     </div>
   </form>
@@ -170,6 +170,6 @@
     Please click on <strong>OK</strong> to return to the survey layout page !
   </div>
   <div align="center">      
-    <button class="btn btn-primary" (click) = 'goBack()'>OK</button>
+    <button type="button" class="btn btn-primary" (click) = 'goBack()'>OK</button>
   </div>
 </ng-template>

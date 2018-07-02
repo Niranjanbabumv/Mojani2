@@ -81,7 +81,7 @@ export class LayoutApplicationComponent implements OnInit {
                     if(response.landRecords!=null){
                       delete response.landRecords["sketch"];
                       this.landRecord =<LandRecord> response.landRecords; 
-                      console.log("landRecord object received:" + this.landRecord);
+                      console.log("landRecord object received:" +JSON.stringify( this.landRecord));
                       this.layoutForm.patchValue(this.landRecord); //set the form model object from data model object
                       this.setGeoCordinates();
                    }
