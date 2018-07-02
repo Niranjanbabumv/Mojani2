@@ -89,7 +89,10 @@ router.post('/api/updateLandRecordMojani', (req, res) => {
 
 	   var record = req.body; // land record to be updated
 	   record["_id"] = result.docs[0]["_id"];
-	   record["_rev"] = result.docs[0]["_rev"];	   
+	   record["_rev"] = result.docs[0]["_rev"];	 
+		if(result.docs[0]['_attachments'] !=null){
+	        record['_attachments'] = result.docs[0]['_attachments'];
+		}	   
 		  mojani.insert(record,function(err, doc){
 					if (err) {
 						console.log("Error updating record to Mojani" +err);
@@ -112,15 +115,20 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
   mojani.find({selector:{wardNo:records[0].wardNo}}, function(er, result){
 	  if (er) {
 		console.log("Error finding documents :" + er);
-      res.json({success : false, message : err+""});
+		res.json({success : false, message : err+""});
 	  }
-	  console.log('Found documents with wardNo '+ records[0].wardNo +":"+ result.docs.length);
+		console.log('Found documents with wardNo '+ records[0].wardNo +":"+ result.docs.length);
 	    console.log('documents with wardNo from mojani'+ records[0].wardNo +":"+ JSON.stringify(result.docs));
 		for (var i = 0; i < records.length; i++) {
 			for(var j=0; j < result.docs.length; j++){
 					if(records[i].pid == result.docs[j].pid){
 						records[i]["_id"] = result.docs[j]["_id"];
 						records[i]["_rev"] = result.docs[j]["_rev"];
+					  if(result.docs[j]['_attachments'] !=null){
+	                      records[i]['_attachments'] = result.docs[j]['_attachments'];
+						}
+						
+				if(records[i].isMojaniApproved){ //only approved records to be put into blockchain	
 					console.log('calling block chain code');	
 		             var ownerReq = {
                      "$class": "org.bhoomi.landrecords.AddOwner",
@@ -132,12 +140,13 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
                         "mobileNo": result.docs[j].ownerDetails.mobileNo+"",
                         "emailID": result.docs[j].ownerDetails.emailID+"",
                         "address": result.docs[j].ownerDetails.address+""	
-                     }
+                     },  "transactionId": "NA",
+						 "timestamp": new Date()+"",
 									}
 									
 									console.log("Owner request body :" +JSON.stringify(ownerReq));
 
-					requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.AddOwner', {
+					requestify.request('http://land-record.mybluemix.net/api/org.bhoomi.landrecords.AddOwner', {
 									method: 'POST',
 									body: ownerReq ,
 									dataType: 'json'		
@@ -151,11 +160,10 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
 							});
 							
 							
-							requestify.request('http://13.232.73.187:3000/api/org.bhoomi.landrecords.AddLandRecord', {
+							requestify.request('http://land-record.mybluemix.net/api/org.bhoomi.landrecords.AddLandRecord', 
+							    {
 									method: 'POST',
 									body: {
-										  "$class": "org.bhoomi.landrecords.AddLandRecord",
-										  "landrecord": {
 											"$class": "org.bhoomi.landrecords.LandRecord",
 											"pid": result.docs[j].pid+"",
 											"wardNo": result.docs[j].wardNo+"",
@@ -171,11 +179,11 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
 											"width": result.docs[j].geoData.width+"",
 											"totalArea": result.docs[j].geoData.totalArea+"",
 											"address": result.docs[j].geoData.address+"",
-											"owner": "resource:org.bhoomi.landrecords.Owner#" + result.docs[j].ownerDetails.aadharNo
-										  }
-										},
-									dataType: 'json'		
-								})
+											"owner": {}
+										  },
+									dataType: 'json'
+								 }
+								)
 							.then(function(response) {
 								// get the code
 								var code = response.getCode();  
@@ -188,13 +196,14 @@ router.post('/api/updateMojaniApprovedStatus', (req, res) => {
 						documentIdsAdded.push(result.docs[j].pid);
 						break;
 					}
+					}
 			}		
 		}
 
 		
 		
 		
-  mojani.bulk({docs : records}, function(err, doc) {
+mojani.bulk({docs : records}, function(err, doc) {
 					if (err) {
 						console.log("Error in updating records to Mojani" +err);
 						res.json({success : false, message : err+""});
@@ -219,7 +228,7 @@ mojani.find({selector:{wardNo:req.params.wardNo}}, function(er, result) {
 	  console.log('Found documents with wardNo count: '+ req.params.wardNo +":"+ result.docs.length);
 	  var filteredRecords;
 	    if(result.docs!=null){
-			filteredRecords= result.docs.filter(record => record.isMojaniSubmitted);
+			filteredRecords= result.docs.filter(record => record.isMojaniSubmitted && !record.isMojaniApproved && !record.isMojaniRejected);
 		}
 	  console.log('Filtered documents with wardNo Approved count: '+ req.params.wardNo +":"+ result.docs.length);
 	  res.json({success : true, message:"Found "+result.docs.length+" documents", landRecords:filteredRecords});
@@ -259,16 +268,17 @@ router.get('/api/getLandRecordsMojaniByPid/:id', (req, res) => {
 /* GET API to get land records from MOJANI using Ward No & Area code*/
 router.get('/api/getLandRecordsMojaniInLayout/:wardNo/:areaCode', (req, res) => {
  console.log('Inside Express api to get land records by Ward No');
-mojani.find({selector:{wardNo:req.params.wardNo, areaCode:req.params.areaCode}}, function(er, result) {4
+mojani.find({selector:{wardNo:req.params.wardNo, areaCode:req.params.areaCode}}, function(er, result) {
 	  if (er) {
 		console.log("Error finding documents :" + er);
 		res.json({success : false,message:"Error finding documents",landRecords:null});
 	  }
-	  console.log('Found documents with ward No & Area Code count: '+ req.params.wardNo +"," + req.params.areaCode + " ="+ result.docs.length);
-/* 	  for (var i = 0; i < result.docs.length; i++) {
-		console.log('Doc:'+ JSON.stringify(result.docs[i]));
-	  } */
-	  res.json({success : true, message:"Found "+result.docs.length+" documents", landRecords:result.docs});
+	  if(result.docs){
+		console.log('Found documents with ward No & Area Code count: '+ req.params.wardNo +"," + req.params.areaCode + " ="+ result.docs.length);
+		res.json({success : true, message:"Found "+result.docs.length+" documents", landRecords:result.docs});
+	  }else{
+		res.json({success : true, message:"Found 0 documents", landRecords:null});
+	  }
 	});
 });
 
