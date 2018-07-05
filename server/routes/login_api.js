@@ -55,7 +55,7 @@ router.post('/api/authentication', (req, res) => {
 	   var userInfoForm = req.body;
 		if(userInfoDB.userId.toUpperCase() == userInfoForm.userId.toUpperCase() && userInfoDB.password == userInfoForm.password){
 			console.log("User Authentication is SUCCESS !");
-		    res.json({authSuccess : true,message :"User Authentication Successful" , role : userInfoDB.role});
+		    res.json({authSuccess : true,message :"User Authentication Successful" , role : userInfoDB.role, user :userInfoDB.userId });
 		}else{
 			 res.json({authSuccess : false,message :"Invalid Username/Password !", role :"INVALID"});
 		}
