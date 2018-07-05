@@ -9,3 +9,15 @@ a.dropdown-toggle, a.logout {
   .logoutMenu .dropdown-menu{
 	background-color : #43c9b0;
   }
+  
+  
+  .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #43c9b0;
+}
+
+
+  .dropdown-menu > li.role > a:hover, .dropdown-menu > li.role > a:focus {
+    color: black;
+}
