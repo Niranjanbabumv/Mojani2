@@ -1,29 +1,29 @@
-.login.alert{
-  color:red;
+.login-form {
+  width: 340px;
+  margin: 50px auto;
 }
-.loginPage{
-  background-image: url("/assets/images/survey-bg.jpg") !important;
-  background-color: red;
-  background-size : cover !important;
- }
-
-
- #loginbox.loginLabels label{
-      color:aliceblue;
-      font-size : 18px;
- }
-
-
- #loginbox.loginLabels .login.alert{
-  font-weight:bold;
-}
+  .login-form form {        
+    margin-bottom: 15px;
+      background: #ffffff17;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+  }
+  .login-form h2 {
+      margin: 0 0 15px;
+      color:#e0e7e7;
+  }
+  .form-control, .btn {
+      min-height: 38px;
+      border-radius: 2px;
+  }
+.input-group-addon .fa {
+      font-size: 18px;
+  }
+  .btn {        
+      font-size: 15px;
+      font-weight: bold;
+  }
 
 #headerTitle.header h3{
-color:aliceblue;
-
+color:#e0e7e7;
 }
-
-
-/* #loginbox .input-group-lg > .form-control, .input-group-lg > .input-group-addon, .input-group-lg > .input-group-btn > .btn {
-
-} */

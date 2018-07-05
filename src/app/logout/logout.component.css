@@ -1,1 +1,11 @@
 /*CSS to go here */
+
+a.dropdown-toggle, a.logout {
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  
+  .logoutMenu .dropdown-menu{
+	background-color : #43c9b0;
+  }

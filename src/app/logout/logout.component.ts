@@ -11,13 +11,20 @@ import {LoginAuthenticationService } from '../services/login-authentication.serv
 })
 
 export class LogoutComponent implements OnInit{
+    loggedInUser : string;
+    userRole : string;
 
     constructor(private authService: LoginAuthenticationService, private router: Router) {}
     ngOnInit() {
-    }		
-    logout() { //redirect to login screen after logout
-       this.authService.logoutUser();
-       this.router.navigateByUrl('/Login');
+      this.loggedInUser =this.authService.getLoggedInUser();
+      this.userRole = this.authService.getLoggedInRole();
+    }
+    
+    
+    logout() { 
+      //redirect to login screen after logout
+      this.authService.logoutUser();
+      this.router.navigateByUrl('/Login');
     }
 
 }

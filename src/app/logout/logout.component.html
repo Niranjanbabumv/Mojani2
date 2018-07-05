@@ -1,1 +1,10 @@
-<a href='#' (click)="logout()"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>Logout</a>
+<div class="dropdown logoutMenu">
+    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+      <a class="dropdown-toggle" data-toggle="dropdown">{{loggedInUser}}
+      <span class="caret"></span></a>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li><a style='font-family:cursive; font-size:15px'>{{userRole.split("_")[1]}}</a></li>
+        <li><hr></li>
+        <li><a class='logout' (click)='logout()'><span class="glyphicon glyphicon-off" aria-hidden="true"></span> <b>Logout</b></a></li>
+      </ul>
+</div>

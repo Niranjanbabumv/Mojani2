@@ -21,8 +21,8 @@ export class LoginComponent implements OnInit {
    // document.body.classList.add("loginPage");
           document.body.style.backgroundImage = "url('/assets/images/survey-bg.jpg')";
           document.body.style.backgroundSize = "cover";
-          document.getElementById("loginbox").classList.add("loginLabels");
-          document.getElementById("headerTitle").classList.add("header");
+          //document.getElementById("loginbox").classList.add("loginLabels");
+          //document.getElementById("headerTitle").classList.add("header");
 
   }
 

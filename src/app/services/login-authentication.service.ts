@@ -10,6 +10,7 @@ export class LoginAuthenticationService {
   private isLoggedIn: boolean = false; 
   private loggedInRole : string;
   private authMessage : string;
+  private loggedInUser : string;
 
   constructor(private http:Http){} 
     // API: POST /UserAuthentication
@@ -24,6 +25,7 @@ export class LoginAuthenticationService {
               this.isLoggedIn = true;
               this.loggedInRole = jsonRes.role;
               this.authMessage = jsonRes.message;
+              this.loggedInUser = jsonRes.user;
               return true;
           }else{
               this.isLoggedIn = false;
@@ -47,9 +49,13 @@ export class LoginAuthenticationService {
 
     }
   
-   getAuthMessage(): string {
+     getAuthMessage(): string {
      return this.authMessage ;
 
     }
+    getLoggedInUser(): string {
+      return this.loggedInUser ;
+ 
+     }
 
 }
