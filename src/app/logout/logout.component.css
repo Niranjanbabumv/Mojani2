@@ -1,23 +1,21 @@
-/*CSS to go here */
-
 a.dropdown-toggle, a.logout {
-    cursor: pointer;
-    user-select: none;
-  }
-  
-  
-  .logoutMenu .dropdown-menu{
-	background-color : #a8d0c8;
-  }
-  
-  
-  .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
-    text-decoration: none;
-    color: #ffffff;
-    background-color: #a8d0c8;
+  cursor: pointer;
+  user-select: none;
 }
 
 
-  .dropdown-menu > li.role > a:hover, .dropdown-menu > li.role > a:focus {
-    color: #333333;
+.logoutMenu .dropdown-menu{
+background-color : #a8d0c8;
+}
+
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #a8d0c8;
+}
+
+
+.dropdown-menu > li.role > a:hover, .dropdown-menu > li.role > a:focus {
+  color: #333333;
 }

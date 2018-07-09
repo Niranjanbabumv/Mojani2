@@ -17,6 +17,7 @@ export class ApproveSurveyComponent implements OnInit {
   fetchComplete : boolean = false;
   noSearchResults : boolean = false;
   approveAction : boolean = false;
+  blockExplorerURL: string;
   
   constructor(private manageLandRecordsService : ManageLandRecordsService, private surveyDataService : SurveyDataService) {
    }
@@ -43,6 +44,7 @@ export class ApproveSurveyComponent implements OnInit {
         console.log("res received updateLandrecordMojani service" + JSON.stringify(response));
         if (response !=null && response.success) {
           this.approveSuccess = true; 
+          this.blockExplorerURL = "https://blockdatalandrecord.mybluemix.net/";
         }   
       });
     

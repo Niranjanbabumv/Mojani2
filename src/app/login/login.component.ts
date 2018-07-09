@@ -57,6 +57,16 @@ export class LoginComponent implements OnInit {
                 this.authMessage = this.loginAuthService.getAuthMessage();
             }
          });
+     }else{
+        if((this.login.username ==null || this.login.username =="")  && (this.login.password ==null || this.login.password == "")){
+          this.authMessage = "Username & password are required !"
+        }
+        else if(this.login.username ==null || this.login.username == ""){
+            this.authMessage = "Username is required !"
+        }
+        else if(this.login.password == null || this.login.password == ""){
+          this.authMessage = "Password is required !";
+        }
      }
   }
 

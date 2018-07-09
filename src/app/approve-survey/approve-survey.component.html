@@ -23,7 +23,7 @@
     </div>
 <!--Search results of the land records for approval -->
 <div *ngIf= "fetchComplete" >
-<table class="table table-striped table-responsive">
+<table class="table table-striped table-responsive table-bordered">
   <thead>
       <tr>
           <th>Property ID</th>
@@ -69,4 +69,6 @@
     Please click on <strong>OK</strong> to approve other applications !
   </div>
   <div align="center"><button type="submit" class="btn btn-primary" (click)="submitNew()">OK</button></div>
+ <br/>
+  <div align="center"><iframe src="https://blockdatalandrecord.mybluemix.net/" width="1000px" height= "680px" frameborder="0"></iframe></div>
 </ng-template>
