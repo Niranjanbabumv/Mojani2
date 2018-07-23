@@ -139,7 +139,7 @@ console.log('calling block chain code');
 }
 console.log("Owner request body :" +JSON.stringify(assigneeReq));
 
-requestify.request('https://landrecord.mybluemix.net/api/AddAssignee', {
+requestify.request(http://13.232.73.187:3000/api/AddAssignee', {
 method: 'POST',
 body: assigneeReq ,
 dataType: 'json' 
@@ -151,7 +151,7 @@ var statusCode = response.getCode();
 console.log(response.getBody());
               
 });
-requestify.request('https://landrecord.mybluemix.net/api/AddLandRecord', 
+requestify.request('http://13.232.73.187:3000/api/AddLandRecord', 
     {
 method: 'POST',
 body: {
