@@ -139,7 +139,7 @@ console.log('calling block chain code');
 }
 console.log("Owner request body :" +JSON.stringify(assigneeReq));
 
-requestify.request(http://13.232.73.187:3000/api/AddAssignee', {
+requestify.request('http://13.232.73.187:3000/api/AddAssignee', {
 method: 'POST',
 body: assigneeReq ,
 dataType: 'json' 
